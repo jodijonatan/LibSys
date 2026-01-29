@@ -51,8 +51,8 @@ A comprehensive web-based library management system built with PHP and MySQL, de
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/digital-library-system.git
-   cd digital-library-system
+   git clone https://github.com/jodijonatan/BukuNet.git
+   cd BukuNet
    ```
 
 2. **Database Setup**
