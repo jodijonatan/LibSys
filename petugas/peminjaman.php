@@ -1,6 +1,30 @@
 <?php
 require '../includes/db.php';
 require '../includes/config.php';
+
+// Process redirects before any output
+if (isset($_POST['pinjam'])) {
+  $user_id = $_POST['user_id'];
+  $book_id = $_POST['book_id'];
+  $tgl_pinjam = date('Y-m-d');
+  $stmt = $conn->prepare("INSERT INTO peminjaman (user_id,book_id,tgl_pinjam,status) VALUES (?,?,?,?)");
+  $stmt->execute([$user_id, $book_id, $tgl_pinjam, 'dipinjam']);
+  $stmt2 = $conn->prepare("UPDATE books SET stok = stok - 1 WHERE id = ?");
+  $stmt2->execute([$book_id]);
+  header("Location: " . getBaseUrl() . "petugas/peminjaman.php");
+  exit;
+}
+
+if (isset($_GET['kembali'])) {
+  $id = $_GET['kembali'];
+  $stmt = $conn->prepare("UPDATE peminjaman SET tgl_kembali=?, status='kembali' WHERE id=?");
+  $stmt->execute([date('Y-m-d'), $id]);
+  $stmt2 = $conn->prepare("UPDATE books b JOIN peminjaman p ON b.id=p.book_id SET b.stok=b.stok+1 WHERE p.id=?");
+  $stmt2->execute([$id]);
+  header("Location: " . getBaseUrl() . "petugas/peminjaman.php");
+  exit;
+}
+
 include '../includes/header.php';
 
 // Proteksi Petugas
@@ -17,20 +41,9 @@ if ($_SESSION['level'] != 'petugas') {
   exit;
 }
 
-// Logic PHP (Tetap sama seperti aslinya agar tidak merusak sistem)
+// Load data after header inclusion
 $anggota = $conn->query("SELECT * FROM users WHERE level='anggota'")->fetchAll(PDO::FETCH_ASSOC);
 $books = $conn->query("SELECT * FROM books WHERE stok > 0")->fetchAll(PDO::FETCH_ASSOC);
-
-if (isset($_POST['pinjam'])) {
-  $user_id = $_POST['user_id'];
-  $book_id = $_POST['book_id'];
-  $tgl_pinjam = date('Y-m-d');
-  $stmt = $conn->prepare("INSERT INTO peminjaman (user_id,book_id,tgl_pinjam,status) VALUES (?,?,?,?)");
-  $stmt->execute([$user_id, $book_id, $tgl_pinjam, 'dipinjam']);
-  $stmt2 = $conn->prepare("UPDATE books SET stok = stok - 1 WHERE id = ?");
-  $stmt2->execute([$book_id]);
-  header("Location: " . getBaseUrl() . "petugas/peminjaman.php");
-}
 
 $peminjaman = $conn->query("
     SELECT p.id, u.nama, b.judul, p.tgl_pinjam, p.tgl_kembali, p.status
@@ -39,15 +52,6 @@ $peminjaman = $conn->query("
     JOIN books b ON p.book_id = b.id
     ORDER BY p.tgl_pinjam DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
-
-if (isset($_GET['kembali'])) {
-  $id = $_GET['kembali'];
-  $stmt = $conn->prepare("UPDATE peminjaman SET tgl_kembali=?, status='kembali' WHERE id=?");
-  $stmt->execute([date('Y-m-d'), $id]);
-  $stmt2 = $conn->prepare("UPDATE books b JOIN peminjaman p ON b.id=p.book_id SET b.stok=b.stok+1 WHERE p.id=?");
-  $stmt2->execute([$id]);
-  header("Location: " . getBaseUrl() . "petugas/peminjaman.php");
-}
 ?>
 
 <div class="max-w-7xl mx-auto px-4 py-8">
