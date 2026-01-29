@@ -1,4 +1,4 @@
-# Digital Library Management System
+# BukuNet - Digital Library Management System
 
 A comprehensive web-based library management system built with PHP and MySQL, designed to streamline book lending, user management, and administrative operations for modern libraries.
 
