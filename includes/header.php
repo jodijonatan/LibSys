@@ -17,7 +17,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LibSys - Management System</title>
+  <title>BukuNet - Management System</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -42,7 +42,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <div class="p-8">
         <div class="flex items-center gap-3 mb-10">
           <div class="w-10 h-10 bg-blue-600 rounded-2xl shadow-lg shadow-blue-200 flex items-center justify-center text-white font-black text-xl">L</div>
-          <span class="font-black text-2xl tracking-tighter text-gray-900">LibSys.</span>
+          <span class="font-black text-2xl tracking-tighter text-gray-900">BukuNet.</span>
         </div>
 
         <nav class="space-y-1.5">
